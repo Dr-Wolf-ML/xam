@@ -1,0 +1,31 @@
+$fluidSize: calc(24px + (42 - 24) * ((100vw - 300px) / (1800 - 300)));
+
+.notFound {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+    min-width: 420px;
+    padding-bottom: 4px;
+    font-size: $fluidSize;
+
+    h1 {
+        color: red;
+        font-size: $fluidSize;
+        padding-bottom: $fluidSize;
+    }
+
+    h4 {
+        color: blue;
+        font-size: calc($fluidSize / 3);
+        padding-top: $fluidSize;
+    }
+
+    .image {
+        padding-left: 5%;
+        width: 90%;
+        height: 90%;
+        object-fit: contain;
+    }
+}
