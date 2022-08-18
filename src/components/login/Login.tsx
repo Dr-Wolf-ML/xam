@@ -1,8 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-
-import { users } from '../../data/users_data';
-// import isEmail from 'validator/lib/isEmail';
-
+import { useNavigate } from 'react-router-dom';
 import {
     Button,
     Card,
@@ -13,8 +10,17 @@ import {
     View,
 } from '@aws-amplify/ui-react';
 
-const Login = () => {
-    const [currentUser, setCurrentUser] = useState('');
+import { users } from '../../data/users_data';
+// import isEmail from 'validator/lib/isEmail';
+
+type Props = {
+    currentUser: {};
+    setCurrentUser: ({}) => void;
+};
+
+const Login = (props: Props) => {
+    const currentUser = props.currentUser;
+    const setCurrentUser = props.setCurrentUser;
 
     const [branchId, setBranchId] = useState('');
     const [userName, setUserName] = useState('');
@@ -27,6 +33,8 @@ const Login = () => {
     const [disableSubmit, setDisableSubmit] = useState(true);
     const [submitWasClickedOnce, setSubmitWasClickedOnce] = useState(false);
     const [credentialError, setCredentialError] = useState(false);
+
+    let navigate = useNavigate();
 
     const handleBranchIdChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -55,9 +63,13 @@ const Login = () => {
 
             if (credentialMatch) {
                 setCurrentUser(users[i].userName);
+
                 console.log('currentUser: ', currentUser);
                 console.log('currentUser: ', users[i]);
+
                 setCredentialError(false);
+
+                navigate('/dashboard', { replace: true });
                 break;
             } else {
                 setCredentialError(true);
