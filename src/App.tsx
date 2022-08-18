@@ -13,9 +13,9 @@ import '@fontsource/inter/variable.css';
 import './styles/app.scss';
 
 // Components
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import NotFound from './components/NotFound';
+import Login from './components/login/Login';
+import Dashboard from './components/dashboard/Dashboard';
+import NotFound from './components/404/NotFound';
 
 export const UserContext = createContext(null);
 

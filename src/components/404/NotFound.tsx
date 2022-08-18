@@ -23,7 +23,7 @@ const NotFound = () => {
             <h1>404 - Not Found</h1>
             <Link to="/" className="image">
                 <img
-                    src={require('../assets/404image.png')}
+                    src={require('../../assets/404image.png')}
                     className="image"
                 />
             </Link>

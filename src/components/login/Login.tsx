@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 
-import { users } from '../data/users_data';
+import { users } from '../../data/users_data';
 // import isEmail from 'validator/lib/isEmail';
 
 import {
