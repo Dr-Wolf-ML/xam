@@ -1,0 +1,20 @@
+.loginCard {
+    margin: auto;
+    margin-top: 20%;
+    width: 400px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.amplify-heading {
+    cursor: default;
+}
+
+.flexGrowButton {
+    flex-grow: 2;
+}
+.error {
+    color: red($color: #000000);
+}
