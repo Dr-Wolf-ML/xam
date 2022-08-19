@@ -36,7 +36,7 @@ const Login = (props: any) => {
         setBranchId(e.target.value);
     };
 
-    const handlUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         setUserName(e.target.value);
     };
@@ -91,7 +91,7 @@ const Login = (props: any) => {
         labelHidden: false,
         type: 'input',
         placeholder: 'username01',
-        onChange: handlUserNameChange,
+        onChange: handleUserNameChange,
         value: userName,
         hasError: userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
@@ -103,10 +103,10 @@ const Login = (props: any) => {
         maxLength: 16,
         type: 'password',
         placeholder: '**********',
-        hasError: passwordHasError,
-        errorMessage: 'Must 8-16 characters',
         onChange: handlePasswordChange,
         value: password,
+        hasError: passwordHasError,
+        errorMessage: 'Must 8-16 characters',
     };
 
     const errorTextProps = {
@@ -115,10 +115,10 @@ const Login = (props: any) => {
         maxLength: 16,
         type: 'password',
         placeholder: '**********',
-        hasError: passwordHasError,
-        errorMessage: 'Must 8-16 characters',
         onChange: handlePasswordChange,
         value: password,
+        hasError: passwordHasError,
+        errorMessage: 'Must 8-16 characters',
     };
 
     const renderLoginErrorMessage = () => {
@@ -135,30 +135,28 @@ const Login = (props: any) => {
         // error checking
         if (!submitWasClickedOnce) {
             setBranchIdError(false);
-        } else if (branchId.length === 5 && parseInt(branchId) / 1) {
-            setBranchIdError(false);
         } else {
-            setBranchIdError(true);
-        }
+            if (branchId.length === 5 && parseInt(branchId) / 1) {
+                setBranchIdError(false);
+            } else {
+                setBranchIdError(true);
+            }
 
-        if (!submitWasClickedOnce) {
-            setBranchIdError(false);
-        } else if (
-            userName.length >= 8 &&
-            userName.length <= 16 &&
-            !/\s/.test(userName)
-        ) {
-            setUserNameError(false);
-        } else {
-            setUserNameError(true);
-        }
+            if (
+                userName.length >= 8 &&
+                userName.length <= 16 &&
+                !/\s/.test(userName)
+            ) {
+                setUserNameError(false);
+            } else {
+                setUserNameError(true);
+            }
 
-        if (!submitWasClickedOnce) {
-            setBranchIdError(false);
-        } else if (password.length >= 8 && password.length <= 16) {
-            setPasswordsError(false);
-        } else {
-            setPasswordsError(true);
+            if (password.length >= 8 && password.length <= 16) {
+                setPasswordsError(false);
+            } else {
+                setPasswordsError(true);
+            }
         }
 
         !branchIdHasError && !userNameHasError && !passwordHasError

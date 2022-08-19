@@ -38,7 +38,7 @@ const Dashboard = (props: Props) => {
 
     const logOut = () => {
         const setCurrentUser = props.setCurrentUser;
-        setCurrentUser(initialUser);
+        setCurrentUser({});
 
         navigate('/', { replace: true });
     };

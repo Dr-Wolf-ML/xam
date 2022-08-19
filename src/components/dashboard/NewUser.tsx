@@ -24,6 +24,8 @@ const NewUser = (props: Props) => {
     const userDb = props.usersDb;
     const setUserDb = props.setUsersDb;
 
+    const [newUser, setNewUser] = useState(initialUser);
+
     const [branchId, setBranchId] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -40,16 +42,37 @@ const NewUser = (props: Props) => {
 
     const handleBranchIdChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        setBranchId(e.target.value);
+        setNewUser(Object.assign({ ...newUser, branchId: e.target.value }));
     };
 
-    const handlUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        setUserName(e.target.value);
+        setNewUser(Object.assign({ ...newUser, userName: e.target.value }));
+    };
+
+    const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setNewUser(Object.assign({ ...newUser, firstName: e.target.value }));
+    };
+
+    const handleMiddleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setNewUser(Object.assign({ ...newUser, middleName: e.target.value }));
+    };
+
+    const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setNewUser(Object.assign({ ...newUser, lastName: e.target.value }));
+    };
+
+    const handlePositionChange = (e: ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        setNewUser(Object.assign({ ...newUser, position: e.target.value }));
     };
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
+        e.preventDefault();
+        setNewUser(Object.assign({ ...newUser, password: e.target.value }));
     };
 
     const handleOnSubmit = async () => {
@@ -80,6 +103,7 @@ const NewUser = (props: Props) => {
         }
     };
 
+    // Textfield props
     const branchIdTextFieldProps = {
         autoFocus: true,
         label: 'Branch ID',
@@ -87,7 +111,7 @@ const NewUser = (props: Props) => {
         type: 'input',
         placeholder: '10001',
         onChange: handleBranchIdChange,
-        value: branchId,
+        value: newUser.branchId,
         hasError: branchIdHasError,
         errorMessage: 'Must be exactly 5 numbers',
     };
@@ -98,8 +122,8 @@ const NewUser = (props: Props) => {
         labelHidden: false,
         type: 'input',
         placeholder: 'username01',
-        onChange: handlUserNameChange,
-        value: userName,
+        onChange: handleUserNameChange,
+        value: newUser.userName,
         hasError: userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
@@ -110,8 +134,8 @@ const NewUser = (props: Props) => {
         labelHidden: false,
         type: 'input',
         placeholder: 'Kingsley',
-        onChange: handlUserNameChange,
-        value: userName,
+        onChange: handleFirstNameChange,
+        value: newUser.firstName,
         hasError: userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
@@ -122,8 +146,8 @@ const NewUser = (props: Props) => {
         labelHidden: false,
         type: 'input',
         placeholder: 'Jordan',
-        onChange: handlUserNameChange,
-        value: userName,
+        onChange: handleMiddleNameChange,
+        value: newUser.middleName,
         hasError: userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
@@ -134,8 +158,8 @@ const NewUser = (props: Props) => {
         labelHidden: false,
         type: 'input',
         placeholder: 'Parker',
-        onChange: handlUserNameChange,
-        value: userName,
+        onChange: handleLastNameChange,
+        value: newUser.lastName,
         hasError: userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
@@ -146,8 +170,8 @@ const NewUser = (props: Props) => {
         labelHidden: false,
         type: 'input',
         placeholder: 'Administrator',
-        onChange: handlUserNameChange,
-        value: userName,
+        onChange: handlePositionChange,
+        value: newUser.position,
         hasError: userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
@@ -158,10 +182,10 @@ const NewUser = (props: Props) => {
         maxLength: 16,
         type: 'password',
         placeholder: '**********',
+        onChange: handlePasswordChange,
+        value: newUser.password,
         hasError: passwordHasError,
         errorMessage: 'Must 8-16 characters',
-        onChange: handlePasswordChange,
-        value: password,
     };
 
     const errorTextProps = {
@@ -190,30 +214,28 @@ const NewUser = (props: Props) => {
         // error checking
         if (!submitWasClickedOnce) {
             setBranchIdError(false);
-        } else if (branchId.length === 5 && parseInt(branchId) / 1) {
-            setBranchIdError(false);
         } else {
-            setBranchIdError(true);
-        }
+            if (branchId.length === 5 && parseInt(branchId) / 1) {
+                setBranchIdError(false);
+            } else {
+                setBranchIdError(true);
+            }
 
-        if (!submitWasClickedOnce) {
-            setBranchIdError(false);
-        } else if (
-            userName.length >= 8 &&
-            userName.length <= 16 &&
-            !/\s/.test(userName)
-        ) {
-            setUserNameError(false);
-        } else {
-            setUserNameError(true);
-        }
+            if (
+                userName.length >= 8 &&
+                userName.length <= 16 &&
+                !/\s/.test(userName)
+            ) {
+                setUserNameError(false);
+            } else {
+                setUserNameError(true);
+            }
 
-        if (!submitWasClickedOnce) {
-            setBranchIdError(false);
-        } else if (password.length >= 8 && password.length <= 16) {
-            setPasswordsError(false);
-        } else {
-            setPasswordsError(true);
+            if (password.length >= 8 && password.length <= 16) {
+                setPasswordsError(false);
+            } else {
+                setPasswordsError(true);
+            }
         }
 
         !branchIdHasError && !userNameHasError && !passwordHasError
