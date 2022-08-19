@@ -1,0 +1,31 @@
+.dashboardView {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    grid-template-rows: auto;
+}
+
+.userName {
+    align-self: center;
+    justify-self: start;
+}
+
+.logOut {
+    align-self: center;
+    justify-self: end;
+}
+
+button {
+    align-self: end;
+    cursor: pointer;
+}
+
+.amplify-heading {
+    cursor: default;
+}
+
+.flexGrowButton {
+    flex-grow: 2;
+}
+.error {
+    color: red($color: #e21313);
+}
