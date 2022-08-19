@@ -1,6 +1,6 @@
 // Modules
 import React, { createContext, useState, useEffect } from 'react';
-import { MemoryRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // AWS
 import Amplify from 'aws-amplify';
@@ -17,7 +17,10 @@ import Login from './components/login/Login';
 import Dashboard from './components/dashboard/Dashboard';
 import NotFound from './components/404/NotFound';
 
-export const UserContext = createContext({});
+// Types
+import { initialUser, initialContext } from './types/userType';
+
+export const UserContext = createContext(initialContext);
 
 const viewAttributes = {
     as: 'div',
@@ -25,7 +28,7 @@ const viewAttributes = {
 };
 
 const App = () => {
-    const [currentUser, setCurrentUser] = useState({});
+    const [currentUser, setCurrentUser] = useState(initialUser);
 
     useEffect(() => {
         console.log('From App: currentUser...', currentUser);
@@ -35,7 +38,7 @@ const App = () => {
         <AmplifyProvider>
             <View {...viewAttributes}>
                 <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-                    <MemoryRouter>
+                    <BrowserRouter>
                         <Routes>
                             <Route
                                 path="/"
@@ -49,7 +52,7 @@ const App = () => {
                             <Route
                                 path="/dashboard"
                                 element={
-                                    currentUser !== {} ? (
+                                    currentUser.userName != '' ? (
                                         <Dashboard
                                             setCurrentUser={setCurrentUser}
                                         />
@@ -60,7 +63,7 @@ const App = () => {
                             />
                             <Route path="*" element={<NotFound />} />
                         </Routes>
-                    </MemoryRouter>
+                    </BrowserRouter>
                 </UserContext.Provider>
             </View>
         </AmplifyProvider>

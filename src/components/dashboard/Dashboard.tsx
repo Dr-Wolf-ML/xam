@@ -11,6 +11,8 @@ import {
     View,
 } from '@aws-amplify/ui-react';
 
+import { initialUser, AppContext } from '../../types/userType';
+
 import { users } from '../../data/users_data';
 import { UserContext } from '../../App';
 // import isEmail from 'validator/lib/isEmail';
@@ -23,12 +25,12 @@ const Dashboard = (props: Props) => {
     let navigate = useNavigate();
 
     const value = React.useContext(UserContext);
-    let userName: any;
-    userName = Object.values(value)[0];
+    const userName: any = value['currentUser'];
+    console.log('userName in Dashboard: ', userName);
 
     const logOut = () => {
         const setCurrentUser = props.setCurrentUser;
-        setCurrentUser({});
+        setCurrentUser(initialUser);
 
         navigate('/', { replace: true });
     };

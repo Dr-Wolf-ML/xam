@@ -13,12 +13,7 @@ import {
 import { users } from '../../data/users_data';
 // import isEmail from 'validator/lib/isEmail';
 
-type Props = {
-    currentUser: {};
-    setCurrentUser: ({}) => void;
-};
-
-const Login = (props: Props) => {
+const Login = (props: any) => {
     const currentUser = props.currentUser;
     const setCurrentUser = props.setCurrentUser;
 
@@ -61,11 +56,12 @@ const Login = (props: Props) => {
             const credentialMatch =
                 branchMatch && userNameMatch && passwordMatch;
 
-            if (credentialMatch) {
-                setCurrentUser(users[i].userName);
+            console.log('Iteration index: ', i);
+            console.log('Iteration of users: ', users[i]);
+            console.log('Iteration of users.userName: ', users[i].userName);
 
-                console.log('currentUser: ', currentUser);
-                console.log('currentUser: ', users[i]);
+            if (credentialMatch) {
+                setCurrentUser(Object.assign(users[i]).userName);
 
                 setCredentialError(false);
 
