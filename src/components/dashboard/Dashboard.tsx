@@ -12,20 +12,20 @@ import {
 } from '@aws-amplify/ui-react';
 // import isEmail from 'validator/lib/isEmail';
 
-import { initialUser, User } from '../../types/userType';
+import { initialUser, initialUserDb } from '../../types/userType';
 
 import { users } from '../../data/users_data';
 import { UserContext } from '../../App';
-import NewUser from './NewUser';
+import AddUser from './AddUser';
 
 type Props = {
-    setCurrentUser: ({}) => void;
+    setCurrentUser: Function;
 };
 
 const Dashboard = (props: Props) => {
     let navigate = useNavigate();
 
-    const [usersDb, setUsersDb] = useState([initialUser]);
+    const [usersDb, setUsersDb] = useState([initialUserDb]);
 
     useEffect(() => {
         setUsersDb(users);
@@ -38,13 +38,13 @@ const Dashboard = (props: Props) => {
 
     const logOut = () => {
         const setCurrentUser = props.setCurrentUser;
-        setCurrentUser({});
+        setCurrentUser(initialUser);
 
         navigate('/', { replace: true });
     };
 
     return (
-        <View class="dashboardView">
+        <View className="dashboardView">
             <Card className="userName" columnStart="1" columnEnd="1">
                 <h1>{userName}</h1>
             </Card>
@@ -52,7 +52,7 @@ const Dashboard = (props: Props) => {
                 <Button onClick={logOut}>Log Out</Button>
             </Card>
             <Card columnStart="1" columnEnd="2">
-                <NewUser usersDb={usersDb} setUsersDb={setUsersDb} />
+                <AddUser usersDb={usersDb} setUsersDb={setUsersDb} />
             </Card>
             <Card columnStart="2" columnEnd="-1">
                 All Users

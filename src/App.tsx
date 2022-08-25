@@ -52,7 +52,7 @@ const App = () => {
                             <Route
                                 path="/dashboard"
                                 element={
-                                    currentUser.userName != '' ? (
+                                    currentUser != initialUser ? (
                                         <Dashboard
                                             setCurrentUser={setCurrentUser}
                                         />
