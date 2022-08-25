@@ -17,6 +17,7 @@ import { initialUser, initialUserDb } from '../../types/userType';
 import { users } from '../../data/users_data';
 import { UserContext } from '../../App';
 import AddUser from './AddUser';
+import ListUsers from './ListUsers';
 
 type Props = {
     setCurrentUser: Function;
@@ -55,7 +56,10 @@ const Dashboard = (props: Props) => {
                 <AddUser usersDb={usersDb} setUsersDb={setUsersDb} />
             </Card>
             <Card columnStart="2" columnEnd="-1">
-                All Users
+                <ListUsers
+                    usersDb={usersDb}
+                    setUsersDb={setUsersDb}
+                ></ListUsers>
             </Card>
         </View>
     );

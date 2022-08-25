@@ -1,0 +1,47 @@
+.listUsers {
+    background-color: rgb(212, 212, 212);
+}
+
+.listGrid {
+    // grid-template-columns: 1fr 4fr 4fr 6fr 4fr 4fr;
+    grid-template-areas: 'record branchId userName name position action';
+}
+
+.listItems {
+    place-self: center;
+
+    .listGrid {
+        font-weight: 800;
+    }
+
+    .record {
+        grid-area: 'record';
+    }
+
+    .branchId {
+        grid-area: 'branchId';
+    }
+
+    .userName {
+        grid-area: 'userName';
+    }
+
+    .name {
+        grid-area: name;
+    }
+
+    .position {
+        grid-area: position;
+    }
+
+    .action {
+        grid-area: action;
+        size: 'small';
+    }
+
+    .button {
+        grid-area: action;
+        size: 'small';
+        --amplify-components-button-small-padding-block-start: 0;
+    }
+}

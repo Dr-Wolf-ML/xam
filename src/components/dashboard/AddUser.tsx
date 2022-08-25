@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
 import {
     Button,
     Card,
@@ -10,7 +9,7 @@ import {
     View,
 } from '@aws-amplify/ui-react';
 
-import { initialUser, User, UserDb } from '../../types/userType';
+import { initialUser, UserDb } from '../../types/userType';
 
 import { users } from '../../data/users_data';
 
@@ -36,7 +35,6 @@ const AddUser = (props: Props) => {
     const [positionHasError, setPositionError] = useState(false);
     const [passwordHasError, setPasswordsError] = useState(false);
     const [formHasErrors, setFormHasErrors] = useState(true);
-    const [userNameExistsError, setUserNameExistsError] = useState(false);
 
     const [disableSubmit, setDisableSubmit] = useState(true);
     const [submitWasClickedOnce, setSubmitWasClickedOnce] = useState(false);
