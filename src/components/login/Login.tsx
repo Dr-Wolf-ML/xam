@@ -10,13 +10,12 @@ import {
     View,
 } from '@aws-amplify/ui-react';
 
-import { users } from '../../data/users_data';
-// import isEmail from 'validator/lib/isEmail';
+import { UserContext } from '../../App';
 
-const Login = (props: any) => {
-    const currentUser = props.currentUser;
-    const setCurrentUser = props.setCurrentUser;
+// Types
+import { UserDb } from '../../types/userType';
 
+const Login = () => {
     const [branchId, setBranchId] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -30,6 +29,11 @@ const Login = (props: any) => {
     const [credentialError, setCredentialError] = useState(false);
 
     let navigate = useNavigate();
+
+    //! App Context
+    const value = React.useContext(UserContext);
+    const userDb: UserDb[] = value['userDb'];
+    const setCurrentUser: Function = value['setCurrentUser'];
 
     const handleBranchIdChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -48,28 +52,24 @@ const Login = (props: any) => {
     const handleOnSubmit = async () => {
         setSubmitWasClickedOnce(true);
 
-        for (var i = 0; i < users.length; i++) {
-            const branchMatch = parseInt(branchId) === users[i].branchId;
-            const userNameMatch = userName === users[i].userName;
-            const passwordMatch = password === users[i].password;
+        const credentialsCheck: any = () => {
+            return userDb!.find((user) => {
+                return (
+                    user.branchId === parseInt(branchId) &&
+                    user.userName === userName &&
+                    user.password === password
+                );
+            });
+        };
 
-            const credentialMatch =
-                branchMatch && userNameMatch && passwordMatch;
+        const userMatch = credentialsCheck();
 
-            console.log('Iteration index: ', i);
-            console.log('Iteration of users: ', users[i]);
-            console.log('Iteration of users.userName: ', users[i].userName);
-
-            if (credentialMatch) {
-                setCurrentUser(Object.assign(users[i]).userName);
-
-                setCredentialError(false);
-
-                navigate('/dashboard', { replace: true });
-                break;
-            } else {
-                setCredentialError(true);
-            }
+        if (userMatch) {
+            setCurrentUser!(userMatch);
+            setCredentialError(false);
+            navigate('/dashboard', { replace: true });
+        } else {
+            setCredentialError(true);
         }
     };
 
@@ -98,18 +98,6 @@ const Login = (props: any) => {
     };
 
     const passwordTextFieldProps = {
-        autoFocus: true,
-        label: 'Password',
-        maxLength: 16,
-        type: 'password',
-        placeholder: '**********',
-        onChange: handlePasswordChange,
-        value: password,
-        hasError: passwordHasError,
-        errorMessage: 'Must 8-16 characters',
-    };
-
-    const errorTextProps = {
         autoFocus: true,
         label: 'Password',
         maxLength: 16,

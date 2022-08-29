@@ -39,8 +39,37 @@ export const initialUserDb: UserDb = {
 };
 
 export interface AppContext {
-    currentUser?: User;
-    setCurrentUser?: Function;
+    currentUser: User;
+    setCurrentUser: Function;
+    userDb: UserDb[];
+    setUserDb: Function;
 }
 
-export const initialContext: AppContext = {};
+export const initialContext: AppContext = {
+    currentUser: initialUser,
+    setCurrentUser: () => {},
+    userDb: [initialUserDb],
+    setUserDb: () => {},
+};
+
+export interface addUserFormErrors {
+    branchIdHasError: boolean;
+    userNameHasError: boolean;
+    firstNameHasError: boolean;
+    middleNameHasError: boolean;
+    lastNameHasError: boolean;
+    positionHasError: boolean;
+    passwordHasError: boolean;
+    formHasErrors: boolean;
+}
+
+export const initialAddUserFormErrors: addUserFormErrors = {
+    branchIdHasError: false,
+    userNameHasError: false,
+    firstNameHasError: false,
+    middleNameHasError: false,
+    lastNameHasError: false,
+    positionHasError: false,
+    passwordHasError: false,
+    formHasErrors: true,
+};

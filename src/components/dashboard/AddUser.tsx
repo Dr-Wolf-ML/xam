@@ -9,32 +9,29 @@ import {
     View,
 } from '@aws-amplify/ui-react';
 
-import { initialUser, UserDb } from '../../types/userType';
+import {
+    initialUser,
+    UserDb,
+    initialAddUserFormErrors,
+} from '../../types/userType';
 
-import { users } from '../../data/users_data';
+import { UserContext } from '../../App';
 
-type Props = {
-    usersDb: UserDb[];
-    setUsersDb: Function;
-};
+interface Update {
+    update: number;
+    setUpdate: Function;
+}
 
-const AddUser = (props: Props) => {
-    const userDb = props.usersDb;
-    const setUserDb = props.setUsersDb;
+const AddUser = ({ update, setUpdate }: Update) => {
+    //! App Context
+    const { userDb, setUserDb } = React.useContext(UserContext);
 
-    console.log('userDb: ', userDb);
+    console.log('userDb in AddUser: ', userDb);
 
     const [newUser, setNewUser] = useState(initialUser);
     console.log('newUser: ', newUser);
 
-    const [branchIdHasError, setBranchIdError] = useState(false);
-    const [userNameHasError, setUserNameError] = useState(false);
-    const [firstNameHasError, setFirstNameError] = useState(false);
-    const [middleNameHasError, setMiddleNameError] = useState(false);
-    const [lastNameHasError, setLastNameError] = useState(false);
-    const [positionHasError, setPositionError] = useState(false);
-    const [passwordHasError, setPasswordsError] = useState(false);
-    const [formHasErrors, setFormHasErrors] = useState(true);
+    const [formErrors, setFormErrors] = useState(initialAddUserFormErrors);
 
     const [disableSubmit, setDisableSubmit] = useState(true);
     const [submitWasClickedOnce, setSubmitWasClickedOnce] = useState(false);
@@ -46,14 +43,8 @@ const AddUser = (props: Props) => {
         const test = /^[0-9]*$/.test(branchId);
 
         if (test) {
-            setBranchIdError(false);
-
-            setNewUser(
-                Object.assign({
-                    ...newUser,
-                    branchId,
-                })
-            );
+            setFormErrors({ ...formErrors, branchIdHasError: false });
+            setNewUser({ ...newUser, branchId: branchId });
         }
     };
 
@@ -64,6 +55,7 @@ const AddUser = (props: Props) => {
 
     const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
+
         setNewUser(Object.assign({ ...newUser, firstName: e.target.value }));
     };
 
@@ -89,61 +81,71 @@ const AddUser = (props: Props) => {
 
     const handleOnReset = () => {
         setSubmitWasClickedOnce(false);
-        setBranchIdError(false);
-        setUserNameError(false);
-        setFirstNameError(false);
-        setMiddleNameError(false);
-        setLastNameError(false);
-        setPositionError(false);
-        setPasswordsError(false);
         setNewUser(initialUser);
-        setFormHasErrors(true);
+        setFormErrors(initialAddUserFormErrors);
     };
 
-    const handleOnAdd = () => {
+    const handleOnAdd = async () => {
         setSubmitWasClickedOnce(true);
 
         checkFormForErrors();
 
-        if (!formHasErrors && !userNameExisits()) {
-            const branchId: number = parseInt(newUser.branchId!);
+        console.warn(
+            'handleOnAdd was clicked with this formHasErrors value: ',
+            formErrors.formHasErrors,
+            newUser.userName,
+            formErrors.userNameHasError
+        );
+
+        if (
+            !formErrors.formHasErrors &&
+            !userNameExisits() &&
+            !formErrors.userNameHasError
+        ) {
+            const branchId: number = parseInt(newUser.branchId);
 
             const newUserWithBranchIdAsNumber: UserDb = Object.assign({
                 ...newUser,
                 branchId,
             });
 
-            let newUserDb = userDb;
+            console.log('userDb before setting in AddUser', userDb);
 
-            newUserDb.push(newUserWithBranchIdAsNumber);
+            const nextIndex = userDb.length;
+            userDb[nextIndex] = newUserWithBranchIdAsNumber;
+            setUserDb(userDb);
 
-            setUserDb(newUserDb);
+            const nextUpdate = update + 1;
+            setUpdate(nextUpdate);
+
+            console.log('userDb after setting in AddUser', userDb);
 
             setSubmitWasClickedOnce(false);
-
-            console.log('newUserDb: ', newUserDb);
-            console.log('userDb: ', userDb);
+            newUser.userName = '';
+            setNewUser(newUser);
         }
     };
 
     const checkFormHasErrors = () => {
         if (
-            !branchIdHasError &&
-            !userNameHasError &&
-            !firstNameHasError &&
-            !middleNameHasError &&
-            !lastNameHasError &&
-            !positionHasError &&
-            !passwordHasError
+            !formErrors.branchIdHasError &&
+            !formErrors.userNameHasError &&
+            !formErrors.firstNameHasError &&
+            !formErrors.middleNameHasError &&
+            !formErrors.lastNameHasError &&
+            !formErrors.positionHasError &&
+            !formErrors.passwordHasError
         ) {
             setDisableSubmit(false);
-            setFormHasErrors(false);
+            formErrors.formHasErrors = false;
         } else {
             setDisableSubmit(true);
-            setFormHasErrors(false);
+            formErrors.formHasErrors = true;
         }
 
-        return formHasErrors;
+        setFormErrors(formErrors);
+
+        return formErrors.formHasErrors;
     };
 
     const userNameExisits = () => {
@@ -184,7 +186,7 @@ const AddUser = (props: Props) => {
         placeholder: '10001',
         onChange: handleBranchIdChange,
         value: newUser.branchId?.toString() ?? '',
-        hasError: branchIdHasError,
+        hasError: formErrors.branchIdHasError,
         errorMessage: 'Must be exactly 5 numbers',
     };
 
@@ -196,7 +198,7 @@ const AddUser = (props: Props) => {
         placeholder: 'username01',
         onChange: handleUserNameChange,
         value: newUser.userName,
-        hasError: userNameHasError,
+        hasError: formErrors.userNameHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
 
@@ -208,7 +210,7 @@ const AddUser = (props: Props) => {
         placeholder: 'Kingsley',
         onChange: handleFirstNameChange,
         value: newUser.firstName,
-        hasError: firstNameHasError,
+        hasError: formErrors.firstNameHasError,
         errorMessage: 'Must 2-20 characters, no spaces',
     };
 
@@ -220,8 +222,8 @@ const AddUser = (props: Props) => {
         placeholder: 'Jordan',
         onChange: handleMiddleNameChange,
         value: newUser.middleName,
-        hasError: middleNameHasError,
-        errorMessage: 'Must 2-20 characters, no spaces',
+        hasError: formErrors.middleNameHasError,
+        errorMessage: 'Can have up to 20 characters, no spaces',
     };
 
     const lastNameTextFieldProps = {
@@ -232,7 +234,7 @@ const AddUser = (props: Props) => {
         placeholder: 'Parker',
         onChange: handleLastNameChange,
         value: newUser.lastName,
-        hasError: lastNameHasError,
+        hasError: formErrors.lastNameHasError,
         errorMessage: 'Must 2-20 characters, no spaces',
     };
 
@@ -244,7 +246,7 @@ const AddUser = (props: Props) => {
         placeholder: 'Administrator',
         onChange: handlePositionChange,
         value: newUser.position,
-        hasError: positionHasError,
+        hasError: formErrors.positionHasError,
         errorMessage: 'Must 4-20 characters, no spaces',
     };
 
@@ -256,86 +258,86 @@ const AddUser = (props: Props) => {
         placeholder: '**********',
         onChange: handlePasswordChange,
         value: newUser.password,
-        hasError: passwordHasError,
+        hasError: formErrors.passwordHasError,
         errorMessage: 'Must 8-16 characters, no spaces',
     };
 
     const checkFormForErrors = () => {
-        // @ts-ignore
         if (newUser.branchId === '') {
-            setBranchIdError(true);
+            formErrors.branchIdHasError = true;
         }
 
         console.log('newUser at checking is: ', newUser);
         console.log('checkforErrors returned', checkFormHasErrors());
 
         if (newUser.branchId.toString().length === 5) {
-            setBranchIdError(false);
+            formErrors.branchIdHasError = false;
         } else {
-            setBranchIdError(true);
+            formErrors.branchIdHasError = true;
         }
 
         if (
             newUser.userName.length >= 8 &&
             newUser.userName.length <= 16 &&
-            !/\s/.test(newUser.userName!)
+            !/\s/.test(newUser.userName)
         ) {
-            setUserNameError(false);
+            formErrors.userNameHasError = false;
         } else {
-            setUserNameError(true);
+            formErrors.userNameHasError = true;
         }
 
         if (
             newUser.firstName.length >= 2 &&
             newUser.firstName.length <= 20 &&
-            !/\s/.test(newUser.firstName!)
+            !/\s/.test(newUser.firstName)
         ) {
-            setFirstNameError(false);
+            formErrors.firstNameHasError = false;
         } else {
-            setFirstNameError(true);
+            formErrors.firstNameHasError = true;
         }
 
         if (newUser.middleName) {
             if (
-                newUser.middleName.length >= 2 &&
                 newUser.middleName.length <= 20 &&
-                !/\s/.test(newUser.middleName!)
+                !/\s/.test(newUser.middleName)
             ) {
-                setMiddleNameError(false);
+                formErrors.middleNameHasError = false;
             } else {
-                setMiddleNameError(true);
+                formErrors.middleNameHasError = true;
             }
         }
 
         if (
             newUser.lastName.length >= 2 &&
             newUser.lastName.length <= 20 &&
-            !/\s/.test(newUser.lastName!)
+            !/\s/.test(newUser.lastName)
         ) {
-            setLastNameError(false);
+            formErrors.lastNameHasError = false;
         } else {
-            setLastNameError(true);
+            formErrors.lastNameHasError = true;
         }
 
         if (
             newUser.position.length >= 4 &&
             newUser.position.length <= 20 &&
-            !/\s/.test(newUser.position!)
+            !/\s/.test(newUser.position)
         ) {
-            setPositionError(false);
+            formErrors.positionHasError = false;
         } else {
-            setPositionError(true);
+            formErrors.positionHasError = true;
         }
 
         if (
             newUser.password.length >= 8 &&
             newUser.password.length <= 16 &&
-            !/\s/.test(newUser.userName!)
+            !/\s/.test(newUser.userName)
         ) {
-            setPasswordsError(false);
+            formErrors.passwordHasError = false;
         } else {
-            setPasswordsError(true);
+            formErrors.passwordHasError = true;
         }
+
+        setFormErrors(formErrors);
     };
 
     useEffect(() => {
@@ -345,35 +347,19 @@ const AddUser = (props: Props) => {
             setDisableSubmit(false);
         }
     }, [
-        newUser.branchId,
-        newUser.userName,
-        newUser.firstName,
-        newUser.middleName,
-        newUser.lastName,
-        newUser.position,
-        newUser.password,
-        branchIdHasError,
-        userNameHasError,
-        firstNameHasError,
-        middleNameHasError,
-        lastNameHasError,
-        positionHasError,
-        passwordHasError,
-        formHasErrors,
+        userDb,
+        newUser,
+        formErrors,
         disableSubmit,
         submitWasClickedOnce,
+        update,
     ]);
-
-    const logBranchId = () => {
-        console.log('branchId just before rendering: ', newUser.branchId);
-    };
 
     return (
         <View>
             <Card className="addUser" variation="outlined">
                 <Flex direction="column" justifyContent="center">
                     <Heading level={4}>Add a new user...</Heading>
-                    <>{logBranchId()}</>
                     <TextField {...branchIdTextFieldProps} />
                     <TextField {...userNameTextFieldProps} />
                     <TextField {...firstNameTextFieldProps} />

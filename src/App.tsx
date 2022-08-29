@@ -3,7 +3,6 @@ import React, { createContext, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // AWS
-import Amplify from 'aws-amplify';
 import { AmplifyProvider, View } from '@aws-amplify/ui-react'; //! AmplifyProvider is the Theming Wrapper
 import '@aws-amplify/ui-react/styles.css';
 
@@ -17,8 +16,17 @@ import Login from './components/login/Login';
 import Dashboard from './components/dashboard/Dashboard';
 import NotFound from './components/404/NotFound';
 
+// Data
+import { users } from './data/users_data';
+
 // Types
-import { initialUser, initialContext } from './types/userType';
+import {
+    initialUser,
+    initialUserDb,
+    User,
+    UserDb,
+    initialContext,
+} from './types/userType';
 
 export const UserContext = createContext(initialContext);
 
@@ -28,34 +36,29 @@ const viewAttributes = {
 };
 
 const App = () => {
-    const [currentUser, setCurrentUser] = useState(initialUser);
+    const [currentUser, setCurrentUser] = useState<User>(initialUser);
+    const [userDb, setUserDb] = useState<UserDb[]>([initialUserDb]);
+    let value = { currentUser, setCurrentUser, userDb, setUserDb };
+
+    console.log('userDb in App: ', userDb);
 
     useEffect(() => {
+        setUserDb(users);
         console.log('From App: currentUser...', currentUser);
-    }, [currentUser]);
+    }, [currentUser, userDb]);
 
     return (
         <AmplifyProvider>
             <View {...viewAttributes}>
-                <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+                <UserContext.Provider value={value}>
                     <BrowserRouter>
                         <Routes>
-                            <Route
-                                path="/"
-                                element={
-                                    <Login
-                                        currentUser={currentUser}
-                                        setCurrentUser={setCurrentUser}
-                                    />
-                                }
-                            />
+                            <Route path="/" element={<Login />} />
                             <Route
                                 path="/dashboard"
                                 element={
-                                    currentUser != initialUser ? (
-                                        <Dashboard
-                                            setCurrentUser={setCurrentUser}
-                                        />
+                                    currentUser !== initialUser ? (
+                                        <Dashboard />
                                     ) : (
                                         <Navigate replace to="/" />
                                     )

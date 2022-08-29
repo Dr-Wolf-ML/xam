@@ -1,129 +1,77 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useEffect } from 'react';
 import {
     Button,
     Card,
+    Divider,
     Flex,
     Grid,
     Heading,
     Text,
-    TextField,
     View,
 } from '@aws-amplify/ui-react';
 
-import { initialUser, UserDb } from '../../types/userType';
+import { UserContext } from '../../App';
+import * as cssProps from './listUsersProps';
 
-import { users } from '../../data/users_data';
+interface Update {
+    update: number;
+}
 
-type Props = {
-    usersDb: UserDb[];
-    setUsersDb: Function;
-};
+const ListUsers = ({ update }: Update) => {
+    //! App Context
+    const { userDb, setUserDb } = React.useContext(UserContext);
 
-const ListUsers = (props: Props) => {
-    const userDb = props.usersDb;
-    const setUserDb = props.setUsersDb;
-
-    const headerGridProps = {
-        className: 'listGrid',
-        width: '100%',
-        templateColumns: '1fr 2fr 3fr 3fr 3fr 2fr',
-        templateAreas: 'record branchId userName name position action',
-        fontSize: '1.5rem',
-        fontWeight: '700',
+    const renderUserList = () => {
+        return userDb.map((user, index) => {
+            return (
+                <Grid {...cssProps.listGridProps} key={index}>
+                    <Text {...cssProps.recordProps}>{index + 1}</Text>
+                    <Text {...cssProps.branchIdProps}>{user.branchId}</Text>
+                    <Text {...cssProps.userNameProps}>{user.userName}</Text>
+                    <Text
+                        {...cssProps.nameProps}
+                    >{`${user.firstName} ${user.middleName} ${user.lastName}`}</Text>
+                    <Text {...cssProps.positionProps}>{user.position}</Text>
+                    {/* @ts-ignore */}
+                    <Button
+                        {...cssProps.buttonProps}
+                        onClick={() => handleRemove(index)}
+                    >
+                        Remove
+                    </Button>
+                </Grid>
+            );
+        });
     };
 
-    const listGridProps = {
-        className: 'listGrid',
-        width: '100%',
-        templateColumns: '1fr 2fr 3fr 3fr 3fr 2fr',
-        templateAreas: 'record branchId userName name position action',
-        fontSize: '1.2rem',
-        fontWeight: '400',
-        border: '1px solid white',
+    const handleRemove = (index: number) => {
+        console.log(`removing entry at index ${index}`);
+
+        console.log('userDb in handleRemove - before splice: ', userDb);
+        setUserDb(Object.assign(userDb.splice(index, 1)));
+        console.log('userDb in handleRemove - after splice: ', userDb);
     };
 
-    const recordProps = {
-        className: 'record',
-        area: 'record',
-        style: { placeSelf: 'center', alignSelf: 'center' },
-    };
-
-    const branchIdProps = {
-        area: 'branchId',
-        style: { placeSelf: 'start', alignSelf: 'center' },
-    };
-
-    const userNameProps = {
-        area: 'userName',
-        style: { placeSelf: 'start', alignSelf: 'center' },
-    };
-
-    const nameProps = {
-        area: 'name',
-        style: { placeSelf: 'start', alignSelf: 'center' },
-    };
-
-    const positionProps = {
-        area: 'position',
-        style: { placeSelf: 'start', alignSelf: 'center' },
-    };
-
-    const actionProps = {
-        area: 'action',
-        style: {
-            margin: '8px',
-            padding: '2px 12px 2px 12px',
-            placeSelf: 'center',
-            alignSelf: 'center',
-        },
-    };
+    useEffect(() => {
+        console.warn('userDb in useEffect or ListUsers', userDb);
+    }, [userDb, update]);
 
     return (
         <View>
             <Card className="listUsers" variation="outlined">
                 <Flex direction="column" justifyContent="center">
                     <Heading level={4}>List of all Users...</Heading>
-                    <Grid {...headerGridProps}>
-                        <Text {...recordProps}>#</Text>
-                        <Text {...branchIdProps}>Branch ID</Text>
-                        <Text {...userNameProps}>User Name</Text>
-                        <Text {...nameProps}>Name</Text>
-                        <Text {...positionProps}>Position</Text>
-                        <Text {...actionProps}>Action</Text>
+                    <Grid {...cssProps.headerGridProps}>
+                        <Text {...cssProps.recordProps}>#</Text>
+                        <Text {...cssProps.branchIdProps}>Branch ID</Text>
+                        <Text {...cssProps.userNameProps}>User Name</Text>
+                        <Text {...cssProps.nameProps}>Name</Text>
+                        <Text {...cssProps.positionProps}>Position</Text>
+                        <Text {...cssProps.actionProps}>Action</Text>
                     </Grid>
+                    <Divider />
                     <ul>
-                        <li>
-                            <Grid {...listGridProps}>
-                                <Text {...recordProps}>1</Text>
-                                <Text {...branchIdProps}>12345</Text>
-                                <Text {...userNameProps}>testuser01</Text>
-                                <Text {...nameProps}>John S.Doe</Text>
-                                <Text {...positionProps}>Developer</Text>
-                                <Button
-                                    {...actionProps}
-                                    size="small"
-                                    className="button"
-                                >
-                                    Remove
-                                </Button>
-                            </Grid>
-                        </li>
-                        <li>
-                            <Grid {...listGridProps}>
-                                <Text {...recordProps}>1</Text>
-                                <Text {...branchIdProps}>12345</Text>
-                                <Text {...userNameProps}>testuser01</Text>
-                                <Text {...nameProps}>John S.Doe</Text>
-                                <Text {...positionProps}>Developer</Text>
-                                <Button
-                                    {...actionProps}
-                                    size="small"
-                                    className="button"
-                                >
-                                    Remove
-                                </Button>
-                            </Grid>
-                        </li>
+                        <li>{renderUserList()}</li>
                     </ul>
                 </Flex>
             </Card>
