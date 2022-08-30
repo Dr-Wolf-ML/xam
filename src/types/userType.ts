@@ -52,7 +52,7 @@ export const initialContext: AppContext = {
     setUserDb: () => {},
 };
 
-export interface addUserFormErrors {
+export interface AddUserFormErrors {
     branchIdHasError: boolean;
     userNameHasError: boolean;
     firstNameHasError: boolean;
@@ -63,7 +63,7 @@ export interface addUserFormErrors {
     formHasErrors: boolean;
 }
 
-export const initialAddUserFormErrors: addUserFormErrors = {
+export const initialAddUserFormErrors: AddUserFormErrors = {
     branchIdHasError: false,
     userNameHasError: false,
     firstNameHasError: false,
@@ -73,3 +73,10 @@ export const initialAddUserFormErrors: addUserFormErrors = {
     passwordHasError: false,
     formHasErrors: true,
 };
+
+export interface CheckFormErrors {
+    newUser: User;
+    formErrors: AddUserFormErrors;
+    setFormErrors: Function;
+    checkFormHasErrors: Function;
+}

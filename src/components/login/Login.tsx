@@ -16,6 +16,8 @@ import { UserContext } from '../../App';
 import { UserDb } from '../../types/userType';
 
 const Login = () => {
+    const { setCurrentUser, userDb } = React.useContext(UserContext);
+
     const [branchId, setBranchId] = useState('');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -29,11 +31,6 @@ const Login = () => {
     const [credentialError, setCredentialError] = useState(false);
 
     let navigate = useNavigate();
-
-    //! App Context
-    const value = React.useContext(UserContext);
-    const userDb: UserDb[] = value['userDb'];
-    const setCurrentUser: Function = value['setCurrentUser'];
 
     const handleBranchIdChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();

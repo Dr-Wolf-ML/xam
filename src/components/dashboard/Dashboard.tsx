@@ -10,7 +10,6 @@ import AddUser from './AddUser';
 import ListUsers from './ListUsers';
 
 const Dashboard = () => {
-    //! App Context
     const { currentUser, setCurrentUser, userDb } = React.useContext(
         UserContext
     );

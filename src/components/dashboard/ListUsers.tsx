@@ -18,7 +18,6 @@ interface Update {
 }
 
 const ListUsers = ({ update }: Update) => {
-    //! App Context
     const { userDb, setUserDb } = React.useContext(UserContext);
 
     const renderUserList = () => {

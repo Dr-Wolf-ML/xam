@@ -16,6 +16,7 @@ import {
 } from '../../types/userType';
 
 import { UserContext } from '../../App';
+import checkFormForErrors from './checkFormErrors';
 
 interface Update {
     update: number;
@@ -23,7 +24,6 @@ interface Update {
 }
 
 const AddUser = ({ update, setUpdate }: Update) => {
-    //! App Context
     const { userDb, setUserDb } = React.useContext(UserContext);
 
     console.log('userDb in AddUser: ', userDb);
@@ -88,7 +88,12 @@ const AddUser = ({ update, setUpdate }: Update) => {
     const handleOnAdd = async () => {
         setSubmitWasClickedOnce(true);
 
-        checkFormForErrors();
+        checkFormForErrors({
+            newUser,
+            formErrors,
+            setFormErrors,
+            checkFormHasErrors,
+        });
 
         console.warn(
             'handleOnAdd was clicked with this formHasErrors value: ',
@@ -97,11 +102,7 @@ const AddUser = ({ update, setUpdate }: Update) => {
             formErrors.userNameHasError
         );
 
-        if (
-            !formErrors.formHasErrors &&
-            !userNameExisits() &&
-            !formErrors.userNameHasError
-        ) {
+        if (!checkFormHasErrors()) {
             const branchId: number = parseInt(newUser.branchId);
 
             const newUserWithBranchIdAsNumber: UserDb = Object.assign({
@@ -262,87 +263,14 @@ const AddUser = ({ update, setUpdate }: Update) => {
         errorMessage: 'Must 8-16 characters, no spaces',
     };
 
-    const checkFormForErrors = () => {
-        if (newUser.branchId === '') {
-            formErrors.branchIdHasError = true;
-        }
-
-        console.log('newUser at checking is: ', newUser);
-        console.log('checkforErrors returned', checkFormHasErrors());
-
-        if (newUser.branchId.toString().length === 5) {
-            formErrors.branchIdHasError = false;
-        } else {
-            formErrors.branchIdHasError = true;
-        }
-
-        if (
-            newUser.userName.length >= 8 &&
-            newUser.userName.length <= 16 &&
-            !/\s/.test(newUser.userName)
-        ) {
-            formErrors.userNameHasError = false;
-        } else {
-            formErrors.userNameHasError = true;
-        }
-
-        if (
-            newUser.firstName.length >= 2 &&
-            newUser.firstName.length <= 20 &&
-            !/\s/.test(newUser.firstName)
-        ) {
-            formErrors.firstNameHasError = false;
-        } else {
-            formErrors.firstNameHasError = true;
-        }
-
-        if (newUser.middleName) {
-            if (
-                newUser.middleName.length <= 20 &&
-                !/\s/.test(newUser.middleName)
-            ) {
-                formErrors.middleNameHasError = false;
-            } else {
-                formErrors.middleNameHasError = true;
-            }
-        }
-
-        if (
-            newUser.lastName.length >= 2 &&
-            newUser.lastName.length <= 20 &&
-            !/\s/.test(newUser.lastName)
-        ) {
-            formErrors.lastNameHasError = false;
-        } else {
-            formErrors.lastNameHasError = true;
-        }
-
-        if (
-            newUser.position.length >= 4 &&
-            newUser.position.length <= 20 &&
-            !/\s/.test(newUser.position)
-        ) {
-            formErrors.positionHasError = false;
-        } else {
-            formErrors.positionHasError = true;
-        }
-
-        if (
-            newUser.password.length >= 8 &&
-            newUser.password.length <= 16 &&
-            !/\s/.test(newUser.userName)
-        ) {
-            formErrors.passwordHasError = false;
-        } else {
-            formErrors.passwordHasError = true;
-        }
-
-        setFormErrors(formErrors);
-    };
-
     useEffect(() => {
         if (submitWasClickedOnce) {
-            checkFormForErrors();
+            checkFormForErrors({
+                newUser,
+                formErrors,
+                setFormErrors,
+                checkFormHasErrors,
+            });
         } else {
             setDisableSubmit(false);
         }
