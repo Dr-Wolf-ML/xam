@@ -12,9 +12,6 @@ import {
 
 import { UserContext } from '../../App';
 
-// Types
-import { UserDb } from '../../types/userType';
-
 const Login = () => {
     const { setCurrentUser, userDb } = React.useContext(UserContext);
 
@@ -71,6 +68,7 @@ const Login = () => {
     };
 
     const branchIdTextFieldProps = {
+        className: 'branchIdTextField',
         autoFocus: true,
         label: 'Branch ID',
         labelHidden: false,
@@ -83,6 +81,7 @@ const Login = () => {
     };
 
     const userNameTextFieldProps = {
+        className: 'userNameTextField',
         autoFocus: true,
         label: 'User Name',
         labelHidden: false,
@@ -95,6 +94,7 @@ const Login = () => {
     };
 
     const passwordTextFieldProps = {
+        className: 'passwordTextField',
         autoFocus: true,
         label: 'Password',
         maxLength: 16,
@@ -169,7 +169,7 @@ const Login = () => {
                     <TextField {...userNameTextFieldProps} />
                     <TextField {...passwordTextFieldProps} />
                     <Button
-                        className="flexGrowButton"
+                        className="flexGrowButton submitButton"
                         onClick={handleOnSubmit}
                         isDisabled={disableSubmit}
                     >

@@ -18,13 +18,13 @@ import {
 import { UserContext } from '../../App';
 import checkFormForErrors from './checkFormErrors';
 
-interface Update {
-    update: number;
-    setUpdate: Function;
-}
-
-const AddUser = ({ update, setUpdate }: Update) => {
-    const { userDb, setUserDb } = React.useContext(UserContext);
+const AddUser = () => {
+    const {
+        userDb,
+        setUserDb,
+        userPoolSize,
+        setUserPoolSize,
+    } = React.useContext(UserContext);
 
     console.log('userDb in AddUser: ', userDb);
 
@@ -102,7 +102,12 @@ const AddUser = ({ update, setUpdate }: Update) => {
             formErrors.userNameHasError
         );
 
-        if (!checkFormHasErrors()) {
+        if (
+            !formErrors.formHasErrors &&
+            !userNameExisits() &&
+            !formErrors.userNameHasError &&
+            !formErrors.passwordHasError
+        ) {
             const branchId: number = parseInt(newUser.branchId);
 
             const newUserWithBranchIdAsNumber: UserDb = Object.assign({
@@ -116,8 +121,7 @@ const AddUser = ({ update, setUpdate }: Update) => {
             userDb[nextIndex] = newUserWithBranchIdAsNumber;
             setUserDb(userDb);
 
-            const nextUpdate = update + 1;
-            setUpdate(nextUpdate);
+            setUserPoolSize(userDb.length);
 
             console.log('userDb after setting in AddUser', userDb);
 
@@ -276,11 +280,11 @@ const AddUser = ({ update, setUpdate }: Update) => {
         }
     }, [
         userDb,
+        userPoolSize,
         newUser,
         formErrors,
         disableSubmit,
         submitWasClickedOnce,
-        update,
     ]);
 
     return (

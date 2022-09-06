@@ -38,14 +38,22 @@ const viewAttributes = {
 const App = () => {
     const [currentUser, setCurrentUser] = useState<User>(initialUser);
     const [userDb, setUserDb] = useState<UserDb[]>([initialUserDb]);
-    let value = { currentUser, setCurrentUser, userDb, setUserDb };
+    const [userPoolSize, setUserPoolSize] = useState(0);
+    let value = {
+        currentUser,
+        setCurrentUser,
+        userDb,
+        setUserDb,
+        userPoolSize,
+        setUserPoolSize,
+    };
 
-    console.log('userDb in App: ', userDb);
+    console.log('userDb in App outside useEffect: ', userDb);
 
     useEffect(() => {
         setUserDb(users);
-        console.log('From App: currentUser...', currentUser);
-    }, [currentUser, userDb]);
+        console.log('userDb in App inside useEffect:', userDb);
+    });
 
     return (
         <AmplifyProvider>

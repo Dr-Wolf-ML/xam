@@ -14,8 +14,6 @@ const Dashboard = () => {
         UserContext
     );
 
-    const [update, setUpdate] = useState(1);
-
     let navigate = useNavigate();
 
     const logOut = () => {
@@ -24,7 +22,9 @@ const Dashboard = () => {
         navigate('/', { replace: true });
     };
 
-    useEffect(() => {}, [currentUser, userDb, update]);
+    useEffect(() => {
+        console.log('userDb in App: ', userDb);
+    }, [currentUser, userDb]);
 
     return (
         <View className="dashboardView">
@@ -35,10 +35,10 @@ const Dashboard = () => {
                 <Button onClick={logOut}>Log Out</Button>
             </Card>
             <Card columnStart="1" columnEnd="2">
-                <AddUser update={update} setUpdate={setUpdate} />
+                <AddUser />
             </Card>
             <Card columnStart="2" columnEnd="-1">
-                <ListUsers update={update} />
+                <ListUsers />
             </Card>
         </View>
     );

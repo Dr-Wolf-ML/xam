@@ -1,0 +1,14 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es5", "dom"],
+        "types": ["cypress", "node"]
+    },
+    "include": [
+        "**/*.ts",
+        "support/e2e.js",
+        "../@cypress.d.ts",
+        "e2e/xam/index.js"
+    ]
+}

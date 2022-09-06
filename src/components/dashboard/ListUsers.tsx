@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Button,
     Card,
@@ -13,12 +13,8 @@ import {
 import { UserContext } from '../../App';
 import * as cssProps from './listUsersProps';
 
-interface Update {
-    update: number;
-}
-
-const ListUsers = ({ update }: Update) => {
-    const { userDb, setUserDb } = React.useContext(UserContext);
+const ListUsers = () => {
+    const { userDb, setUserDb, userPoolSize } = React.useContext(UserContext);
 
     const renderUserList = () => {
         return userDb.map((user, index) => {
@@ -51,9 +47,7 @@ const ListUsers = ({ update }: Update) => {
         console.log('userDb in handleRemove - after splice: ', userDb);
     };
 
-    useEffect(() => {
-        console.warn('userDb in useEffect or ListUsers', userDb);
-    }, [userDb, update]);
+    useEffect(() => {}, [userPoolSize]);
 
     return (
         <View>

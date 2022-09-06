@@ -43,6 +43,8 @@ export interface AppContext {
     setCurrentUser: Function;
     userDb: UserDb[];
     setUserDb: Function;
+    userPoolSize: number;
+    setUserPoolSize: Function;
 }
 
 export const initialContext: AppContext = {
@@ -50,6 +52,8 @@ export const initialContext: AppContext = {
     setCurrentUser: () => {},
     userDb: [initialUserDb],
     setUserDb: () => {},
+    userPoolSize: 0,
+    setUserPoolSize: () => {},
 };
 
 export interface AddUserFormErrors {
