@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# This is the implementation of a coding test for XAM Coinsulting in Sydney
+
+## All coding test instructions can be found at "/design samples"
+
+### To run the project at [http://localhost:3000](http://localhost:3000), enter `npm start` in the terminal
+
+### To run an end-2-end with Cypress, enter `npm run cypress` in the terminal
+
+### Correct login details for the first screen can be found at /src/data/user_data.ts
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -15,6 +25,8 @@ The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
 ### `npm test`
+
+...is bootstrapped, but not used here
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
